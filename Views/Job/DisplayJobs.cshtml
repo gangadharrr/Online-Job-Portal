@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+}
+<br>
+<h1>Jobs List</h1>
+<a href="/Job/AddJobs" class="btn btn-primary" role="button">Add Jobs</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Job Id</th>
+            <th>Job Name</th>
+            <th>Job Description</th>
+            <th>Salary(LPA)</th>
+            <th>Company Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Job job in (List<Job>)ViewBag.JobList)
+        {
+            <tr>
+                <td>@job.JobId</td>
+                <td>@job.JobName</td>
+                <td>@job.JobDescription</td>
+                <td>@job.JobSalary</td>
+                <td>@job.CompanyName</td>
+
+            </tr>
+        }
+    </tbody>
+
+</table>

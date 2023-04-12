@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<form class="form-text" method="post">
+    <div class="row mb-3">
+
+        <div class="input-group-sm">
+            <label class="col-form-label-sm">Job Name</label>
+            <input type="text" name="JobName" placeholder="Enter Job Name" required /><br>
+        </div>
+    </div>
+    <div class="row mb-3">
+
+        <div class="input-group-sm">
+            <label class="col-form-label-sm">Job Description</label><br>
+            <textarea name="JobDescription" placeholder="Enter Job Description" required></textarea><br>
+        </div>
+    </div>
+    <div class="row mb-3">
+
+        <div class="input-group-sm">
+            <label class="col-form-label-sm">Job Salary</label>
+            <input type="number" step=any name ="JobSalary" placeholder="Enter Salary" required /><br>
+        </div>
+    </div>
+    <div class="row mb-3">
+
+        <div class="input-group-sm">
+            <label class="col-form-label-sm">Company Id</label>
+            <input type="number" name="CompanyId" placeholder="Enter Company Id" required /><br>
+        </div>
+    </div>
+    @if (ViewData["Message"].ToString().Length > 1 && (ViewBag.Error))
+    {
+        <div class="error-dic">
+            <div class="alert-warning" id="alert">
+                <label style="color:red">@ViewData["Message"].ToString().</label>
+                <button class="btn-close" data-dismiss="alert" onclick="document.getElementById('alert').remove()">Close</button>
+            </div>
+        </div>
+    }
+
+    else if (ViewData["Message"].ToString().Length > 1)
+    {
+        <div class="error-dic">
+            <div class="alert-warning" id="alert">
+                <label style="color:green">@ViewData["Message"].ToString()</label>
+                <button class="btn-close" data-dismiss="alert" onclick="document.getElementById('alert').remove()">Close</button>
+            
+            </div>
+        </div>
+    }
+    <div class="row mb-3">
+
+        <div class="input-group-sm">
+            <button class="btn-primary" type="submit">Submit</button>
+        </div>
+    </div>
+</form>
+
