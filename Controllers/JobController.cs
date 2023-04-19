@@ -7,7 +7,7 @@ namespace Online_Job_Portal.Controllers
 {
     public class JobController : Controller
     {
-        private List<Job> JobList = new List<Job>();
+        //private  List<Job> JobList = new List<Job>();
         private IConfiguration Configuration;
         public JobController(IConfiguration configuration)
         {
@@ -58,9 +58,10 @@ namespace Online_Job_Portal.Controllers
 
             return View();
         }
-        public IActionResult DisplayJobs()
-        {
 
+        private List<Job> getJobs() {
+           
+            List<Job> JobsList = new List<Job>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Configuration.GetConnectionString("Online_Job_Portal")))
@@ -78,7 +79,7 @@ namespace Online_Job_Portal.Controllers
                             job.JobDescription = (string)reader["JOB_DESCRIPTION"];
                             job.JobSalary = (double)reader["JOB_SALARY"];
                             job.CompanyName = (string)reader["COMPANY_NAME"];
-                            JobList.Add(job);
+                            JobsList.Add(job);
                         }
                     }
                 }
@@ -91,8 +92,107 @@ namespace Online_Job_Portal.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
-            ViewBag.JobList = JobList;
+            return JobsList;
+        } 
+        public IActionResult DisplayJobs()
+        {
+
+            
+            ViewBag.JobList = getJobs();
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Id = id;
+            ViewBag.JobList = getJobs();
+            return View();
+        }
+
+
+        public void updateJob(Job job)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(Configuration.GetConnectionString("Online_Job_Portal")))
+            {
+
+                using (SqlCommand cmd = sqlConnection.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "updateJob";
+
+                    cmd.Parameters.AddWithValue("@JOB_ID", job.JobId);
+                    cmd.Parameters.AddWithValue("@JOB_NAME", job.JobName);
+                    cmd.Parameters.AddWithValue("@JOB_DESCRIPTION", job.JobDescription);
+                    cmd.Parameters.AddWithValue("@JOB_SALARY", job.JobSalary);
+
+                    // Not used in the procedure
+                    cmd.Parameters.AddWithValue("@COMPANY_ID", job.CompanyId);
+
+                    sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+
+                }
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(int id, IFormCollection form)
+        {
+            try
+            {
+
+                Job job = new Job() {   JobId= Convert.ToInt32( form["jobId"]) ,JobDescription= form["jobDescription"], JobName= form["jobName"]   ,
+                    
+                    JobSalary = Convert.ToInt32(form["jobSalary"]),
+                    CompanyId = Convert.ToInt32(form["companyId"])
+
+                };
+                updateJob(job);
+                return RedirectToAction("DisplayJobs");
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return View();
+            }
+        }
+
+
+        private void deleteJob(int jobId)
+        {
+
+            using (SqlConnection sqlConnection = new SqlConnection(Configuration.GetConnectionString("Online_Job_Portal")))
+            {
+                
+                using (SqlCommand cmd = sqlConnection.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText= "deleteJob";
+
+                    cmd.Parameters.AddWithValue("@JOB_ID",jobId);
+
+                    sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+
+                }
+            }
+
+        }
+
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                deleteJob(id);
+                return RedirectToAction("DisplayJobs");
+            }catch (Exception ex)
+            {
+                return View();
+            }
+
         }
     }
 }

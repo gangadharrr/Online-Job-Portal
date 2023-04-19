@@ -1,4 +1,8 @@
-﻿USE [Online Job Portal]
+﻿
+
+create database [Online Job Portal]
+
+USE [Online Job Portal]
 
 DROP TABLE JOBS;
 DROP TABLE COMPANIES;
@@ -31,3 +35,13 @@ INSERT INTO JOBS VALUES
 select * from jobs;
 select * from COMPANIES;
 
+
+create or alter procedure deleteJob @JOB_ID int 
+as
+DELETE from JOBS where (JOB_ID = @JOB_ID);
+
+
+create or alter procedure updateJob @JOB_ID int, @JOB_NAME  VARCHAR(30), @JOB_DESCRIPTION  VARCHAR(MAX), @JOB_SALARY  FLOAT, @COMPANY_ID INT
+as
+UPDATE  jobs 
+set  JOB_NAME =  @JOB_NAME, JOB_DESCRIPTION = @JOB_DESCRIPTION , JOB_SALARY = @JOB_SALARY  where  JOB_ID = @JOB_ID  ;

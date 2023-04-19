@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+}
+<br>
+<h1>Jobs List</h1>
+<a href="/Job/AddJobs" class="btn btn-primary" role="button">Add Jobs</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Job Id</th>
+            <th>Job Name</th>
+            <th>Job Description</th>
+            <th>Salary(LPA)</th>
+            <th>Company Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Job job in (List<Job>)ViewBag.JobList)
+        {
+            <tr>
+            @if( job.JobId == ViewBag.Id ){
+                    <form method="post" action="/Job/Edit/@job.JobId">
+                    <td>
+                        <input type="number" value="@job.JobId" name="jobId" readonly />
+                    </td>
+
+                    <td>
+                        <input type="text" value="@job.JobName" name="jobName" placeholder="job name"  />
+                    </td>
+
+                    <td>
+                        <textarea type="text"  placeholder="job description" name="jobDescription">@job.JobDescription</textarea>
+                    </td>
+
+                    <td>
+                        <input type="number" value="@job.JobSalary" placeholder="salary" name="jobSalary" step="any" />
+                    </td>
+
+                    <td>
+                        <input type="text" value="@job.CompanyName" placeholder="Company name" name="jobCompany" readonly/>
+                    </td>
+                    <td> 
+                        <button class="btn btn-primary btn-sm"  type="submit"  >Apply</button>  
+                    </td>
+                   </form>
+
+
+            }
+            else
+            {
+                
+                    <td>@job.JobId</td>
+                    <td>@job.JobName</td>
+                    <td>@job.JobDescription</td>
+                    <td>@job.JobSalary</td>
+                    <td>@job.CompanyName</td>
+                    <td> <button class="btn btn-sm btn-danger"  onclick='myDelete("/Job/Delete/@job.JobId","@job.JobId")'>delete</button>  </td>
+                
+            }
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<script>
+    function myDelete(link, id) {
+        let text = "Are you sure you want to delete book " + id + " ?";
+        let _link = link;
+        if (confirm(text) == true) {
+
+            window.open(link, '_self');
+        }
+    }
+</script>
